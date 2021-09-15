@@ -31,11 +31,9 @@ const updateMailConfig = _.debounce(() => {
 	Accounts.emailTemplates.siteName = settings.get('Site_Name');
 
 	Accounts.emailTemplates.from = `${ settings.get('Site_Name') } <${ settings.get('From_Email') }>`;
-}, 1000);
+}, 100);
 
-Meteor.startup(() => {
-	settings.get(/^(Accounts_LoginExpiration|Site_Name|From_Email)$/, updateMailConfig);
-});
+settings.get(/^(Accounts_LoginExpiration|Site_Name|From_Email)$/, updateMailConfig);
 
 Accounts.emailTemplates.userToActivate = {
 	subject() {
@@ -79,16 +77,15 @@ Accounts.emailTemplates.userActivated = {
 let verifyEmailTemplate = '';
 let enrollAccountTemplate = '';
 let resetPasswordTemplate = '';
-Meteor.startup(() => {
-	Mailer.getTemplateWrapped('Verification_Email', (value) => {
-		verifyEmailTemplate = value;
-	});
-	Mailer.getTemplateWrapped('Accounts_Enrollment_Email', (value) => {
-		enrollAccountTemplate = value;
-	});
-	Mailer.getTemplateWrapped('Forgot_Password_Email', (value) => {
-		resetPasswordTemplate = value;
-	});
+
+Mailer.getTemplateWrapped('Verification_Email', (value) => {
+	verifyEmailTemplate = value;
+});
+Mailer.getTemplateWrapped('Accounts_Enrollment_Email', (value) => {
+	enrollAccountTemplate = value;
+});
+Mailer.getTemplateWrapped('Forgot_Password_Email', (value) => {
+	resetPasswordTemplate = value;
 });
 
 Accounts.emailTemplates.verifyEmail.html = function(userModel, url) {

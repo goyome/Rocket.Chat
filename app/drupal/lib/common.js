@@ -26,11 +26,9 @@ const config = {
 const Drupal = new CustomOAuth('drupal', config);
 
 if (Meteor.isServer) {
-	Meteor.startup(function() {
-		settings.get('API_Drupal_URL', function(key, value) {
-			config.serverURL = value;
-			Drupal.configure(config);
-		});
+	settings.get('API_Drupal_URL', function(key, value) {
+		config.serverURL = value;
+		Drupal.configure(config);
 	});
 } else {
 	Meteor.startup(function() {

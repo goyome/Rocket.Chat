@@ -17,28 +17,28 @@ if (Permissions) {
 
 const licenseCronName = 'Cloud Workspace Sync';
 
-Meteor.startup(function() {
-	// run token/license sync if registered
-	let TroubleshootDisableWorkspaceSync;
-	settings.get('Troubleshoot_Disable_Workspace_Sync', (key, value) => {
-		if (TroubleshootDisableWorkspaceSync === value) { return; }
-		TroubleshootDisableWorkspaceSync = value;
 
-		if (value) {
-			return SyncedCron.remove(licenseCronName);
-		}
+// run token/license sync if registered
+let TroubleshootDisableWorkspaceSync;
+settings.get('Troubleshoot_Disable_Workspace_Sync', (key, value) => {
+	if (TroubleshootDisableWorkspaceSync === value) { return; }
+	TroubleshootDisableWorkspaceSync = value;
 
-		Meteor.defer(() => syncWorkspace());
+	if (value) {
+		return SyncedCron.remove(licenseCronName);
+	}
 
-		SyncedCron.add({
-			name: licenseCronName,
-			schedule(parser) {
-				// Every 12 hours
-				return parser.cron('0 */12 * * *');
-			},
-			job: syncWorkspace,
-		});
+	Meteor.defer(() => syncWorkspace());
+
+	SyncedCron.add({
+		name: licenseCronName,
+		schedule(parser) {
+			// Every 12 hours
+			return parser.cron('0 */12 * * *');
+		},
+		job: syncWorkspace,
 	});
 });
+
 
 export { getWorkspaceAccessToken, getWorkspaceAccessTokenWithScope, getWorkspaceLicense, getWorkspaceKey, getUserCloudAccessToken };

@@ -21,11 +21,9 @@ const config = {
 const GitHubEnterprise = new CustomOAuth('github_enterprise', config);
 
 if (Meteor.isServer) {
-	Meteor.startup(function() {
-		settings.get('API_GitHub_Enterprise_URL', function(key, value) {
-			config.serverURL = value;
-			GitHubEnterprise.configure(config);
-		});
+	settings.get('API_GitHub_Enterprise_URL', function(key, value) {
+		config.serverURL = value;
+		GitHubEnterprise.configure(config);
 	});
 } else {
 	Meteor.startup(function() {

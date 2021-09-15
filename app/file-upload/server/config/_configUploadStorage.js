@@ -18,6 +18,7 @@ const configStore = _.debounce(() => {
 		UploadFS.getStores().Uploads = UploadFS.getStore(`${ store }:Uploads`);
 		UploadFS.getStores().UserDataFiles = UploadFS.getStore(`${ store }:UserDataFiles`);
 	}
-}, 1000);
+}, 100);
+
 
 settings.get(/^FileUpload_/, configStore);

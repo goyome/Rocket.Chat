@@ -28,8 +28,5 @@ const configureService = _.debounce(Meteor.bindEnvironment(() => {
 	});
 }), 1000);
 
-Meteor.startup(() => {
-	settings.get('Accounts_OAuth_Apple', () => {
-		configureService();
-	});
-});
+
+settings.get('Accounts_OAuth_Apple', configureService);

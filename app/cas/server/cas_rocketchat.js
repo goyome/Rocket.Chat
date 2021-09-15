@@ -6,36 +6,35 @@ import { settings } from '../../settings';
 
 export const logger = new Logger('CAS');
 
-Meteor.startup(function() {
-	settings.addGroup('CAS', function() {
-		this.add('CAS_enabled', false, { type: 'boolean', group: 'CAS', public: true });
-		this.add('CAS_base_url', '', { type: 'string', group: 'CAS', public: true });
-		this.add('CAS_login_url', '', { type: 'string', group: 'CAS', public: true });
-		this.add('CAS_version', '1.0', { type: 'select', values: [{ key: '1.0', i18nLabel: '1.0' }, { key: '2.0', i18nLabel: '2.0' }], group: 'CAS' });
-		this.add('CAS_trust_username', false, { type: 'boolean', group: 'CAS', public: true, i18nDescription: 'CAS_trust_username_description' });
-		// Enable/disable user creation
-		this.add('CAS_Creation_User_Enabled', true, { type: 'boolean', group: 'CAS' });
 
-		this.section('Attribute_handling', function() {
-			// Enable/disable sync
-			this.add('CAS_Sync_User_Data_Enabled', true, { type: 'boolean' });
-			// Attribute mapping table
-			this.add('CAS_Sync_User_Data_FieldMap', '{}', { type: 'string' });
-		});
+settings.addGroup('CAS', function() {
+	this.add('CAS_enabled', false, { type: 'boolean', group: 'CAS', public: true });
+	this.add('CAS_base_url', '', { type: 'string', group: 'CAS', public: true });
+	this.add('CAS_login_url', '', { type: 'string', group: 'CAS', public: true });
+	this.add('CAS_version', '1.0', { type: 'select', values: [{ key: '1.0', i18nLabel: '1.0' }, { key: '2.0', i18nLabel: '2.0' }], group: 'CAS' });
+	this.add('CAS_trust_username', false, { type: 'boolean', group: 'CAS', public: true, i18nDescription: 'CAS_trust_username_description' });
+	// Enable/disable user creation
+	this.add('CAS_Creation_User_Enabled', true, { type: 'boolean', group: 'CAS' });
 
-		this.section('CAS_Login_Layout', function() {
-			this.add('CAS_popup_width', '810', { type: 'int', group: 'CAS', public: true });
-			this.add('CAS_popup_height', '610', { type: 'int', group: 'CAS', public: true });
-			this.add('CAS_button_label_text', 'CAS', { type: 'string', group: 'CAS' });
-			this.add('CAS_button_label_color', '#FFFFFF', { type: 'color', group: 'CAS' });
-			this.add('CAS_button_color', '#1d74f5', { type: 'color', group: 'CAS' });
-			this.add('CAS_autoclose', true, { type: 'boolean', group: 'CAS' });
-		});
+	this.section('Attribute_handling', function() {
+		// Enable/disable sync
+		this.add('CAS_Sync_User_Data_Enabled', true, { type: 'boolean' });
+		// Attribute mapping table
+		this.add('CAS_Sync_User_Data_FieldMap', '{}', { type: 'string' });
+	});
+
+	this.section('CAS_Login_Layout', function() {
+		this.add('CAS_popup_width', '810', { type: 'int', group: 'CAS', public: true });
+		this.add('CAS_popup_height', '610', { type: 'int', group: 'CAS', public: true });
+		this.add('CAS_button_label_text', 'CAS', { type: 'string', group: 'CAS' });
+		this.add('CAS_button_label_color', '#FFFFFF', { type: 'color', group: 'CAS' });
+		this.add('CAS_button_color', '#1d74f5', { type: 'color', group: 'CAS' });
+		this.add('CAS_autoclose', true, { type: 'boolean', group: 'CAS' });
 	});
 });
 
-let timer;
 
+let timer;
 function updateServices(/* record*/) {
 	if (typeof timer !== 'undefined') {
 		Meteor.clearTimeout(timer);
@@ -60,11 +59,11 @@ function updateServices(/* record*/) {
 		if (data.enabled) {
 			logger.info('Enabling CAS login service');
 			ServiceConfiguration.configurations.upsert({ service: 'cas' }, { $set: data });
-		} else {
-			logger.info('Disabling CAS login service');
-			ServiceConfiguration.configurations.remove({ service: 'cas' });
+			return;
 		}
-	}, 2000);
+		logger.info('Disabling CAS login service');
+		ServiceConfiguration.configurations.remove({ service: 'cas' });
+	}, 100);
 }
 
 settings.get(/^CAS_.+/, (key, value) => {

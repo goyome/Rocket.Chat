@@ -333,12 +333,8 @@ const addCronJob = _.debounce(Meteor.bindEnvironment(function addCronJobDebounce
 	}
 }), 500);
 
-Meteor.startup(() => {
-	Meteor.defer(() => {
-		settings.get('CROWD_Sync_Interval', addCronJob);
-		settings.get('CROWD_Sync_User_Data', addCronJob);
-	});
-});
+settings.get('CROWD_Sync_Interval', addCronJob);
+settings.get('CROWD_Sync_User_Data', addCronJob);
 
 Meteor.methods({
 	crowd_test_connection() {

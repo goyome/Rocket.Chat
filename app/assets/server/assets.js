@@ -355,13 +355,12 @@ for (const key of Object.keys(assets)) {
 
 settings.get(/^Assets_/, (key, value) => RocketChatAssets.processAsset(key, value));
 
-Meteor.startup(function() {
-	return Meteor.setTimeout(function() {
-		return process.emit('message', {
-			refresh: 'client',
-		});
-	}, 200);
-});
+
+Meteor.setTimeout(function() {
+	return process.emit('message', {
+		refresh: 'client',
+	});
+}, 200);
 
 const { calculateClientHash } = WebAppHashing;
 

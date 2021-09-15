@@ -17,21 +17,19 @@ const defaults = {
 	buttonLabelColor: '#ffffff',
 };
 
-Meteor.startup(() => {
-	settings.addGroup('Blockstack', function() {
-		this.add('Blockstack_Enable', defaults.enable, {
-			type: 'boolean',
-			i18nLabel: 'Enable',
-		});
-		this.add('Blockstack_Auth_Description', defaults.authDescription, {
-			type: 'string',
-		});
-		this.add('Blockstack_ButtonLabelText', defaults.buttonLabelText, {
-			type: 'string',
-		});
-		this.add('Blockstack_Generate_Username', defaults.generateUsername, {
-			type: 'boolean',
-		});
+settings.addGroup('Blockstack', function() {
+	this.add('Blockstack_Enable', defaults.enable, {
+		type: 'boolean',
+		i18nLabel: 'Enable',
+	});
+	this.add('Blockstack_Auth_Description', defaults.authDescription, {
+		type: 'string',
+	});
+	this.add('Blockstack_ButtonLabelText', defaults.buttonLabelText, {
+		type: 'string',
+	});
+	this.add('Blockstack_Generate_Username', defaults.generateUsername, {
+		type: 'boolean',
 	});
 });
 
@@ -63,8 +61,7 @@ const configureService = _.debounce(Meteor.bindEnvironment(() => {
 }), 1000);
 
 // Add settings to auth provider configs on startup
-Meteor.startup(() => {
-	settings.get(/^Blockstack_.+/, () => {
-		configureService();
-	});
+
+settings.get(/^Blockstack_.+/, () => {
+	configureService();
 });

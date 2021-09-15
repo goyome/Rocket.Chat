@@ -44,17 +44,16 @@ const unauthorized = (res) => res.status(401).send({
 	message: 'You must be logged in to do this.',
 });
 
-Meteor.startup(() => {
-	// use specific rate limit of 600 (which is 60 times the default limits) requests per minute (around 10/second)
-	const apiLimiter = rateLimit({
-		windowMs: settings.get('API_Enable_Rate_Limiter_Limit_Time_Default'),
-		max: settings.get('API_Enable_Rate_Limiter_Limit_Calls_Default') * 60,
-		skip: () =>
-			settings.get('API_Enable_Rate_Limiter') !== true
-			|| (process.env.NODE_ENV === 'development' && settings.get('API_Enable_Rate_Limiter_Dev') !== true),
-	});
-	router.use(apiLimiter);
+
+// use specific rate limit of 600 (which is 60 times the default limits) requests per minute (around 10/second)
+const apiLimiter = rateLimit({
+	windowMs: settings.get('API_Enable_Rate_Limiter_Limit_Time_Default'),
+	max: settings.get('API_Enable_Rate_Limiter_Limit_Calls_Default') * 60,
+	skip: () =>
+		settings.get('API_Enable_Rate_Limiter') !== true
+		|| (process.env.NODE_ENV === 'development' && settings.get('API_Enable_Rate_Limiter_Dev') !== true),
 });
+router.use(apiLimiter);
 
 router.use((req, res, next) => {
 	const {

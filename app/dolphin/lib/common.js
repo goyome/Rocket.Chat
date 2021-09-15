@@ -29,12 +29,10 @@ function DolphinOnCreateUser(options, user) {
 }
 
 if (Meteor.isServer) {
-	Meteor.startup(() =>
-		settings.get('Accounts_OAuth_Dolphin_URL', (key, value) => {
-			config.serverURL = value;
-			return Dolphin.configure(config);
-		}),
-	);
+	settings.get('Accounts_OAuth_Dolphin_URL', (key, value) => {
+		config.serverURL = value;
+		return Dolphin.configure(config);
+	});
 
 	if (settings.get('Accounts_OAuth_Dolphin_URL')) {
 		const data = {
